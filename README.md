@@ -133,7 +133,7 @@ pip install pygame
 python main.py
 ```
 
-🧾 Deliverables Summary
+## 🧾 Deliverables Summary
 Task	Deliverable	Status
 1	Fixed ball collision logic	✅
 2	Added proper game-over state	✅
