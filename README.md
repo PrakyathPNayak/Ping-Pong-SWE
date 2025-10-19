@@ -110,18 +110,18 @@ My task was to **understand the intent**, **detect the bugs**, and **fix them** 
 
 ## 📂 Project Structure
 
-ping-pong/
-├── main.py
-├── game/
-│ ├── init.py
-│ ├── ball.py
-│ ├── paddle.py
-│ └── game_engine.py
-├── assets/
-│ ├── hit.wav
-│ ├── wall.wav
-│ └── score.wav
-├── requirements.txt
+ping-pong/  
+├── main.py  
+├── game/  
+│ ├── __init__.py  
+│ ├── ball.py  
+│ ├── paddle.py  
+│ └── game_engine.py  
+├── assets/  
+│ ├── hit.wav  
+│ ├── wall.wav  
+│ └── score.wav  
+├── requirements.txt  
 └── README.md ← (this file)
 
 ---
@@ -129,17 +129,22 @@ ping-pong/
 ## 🚀 How to Run
 
 ```bash
-pip install pygame
+pip install pygame  
 python main.py
 ```
 
+---
+
 ## 🧾 Deliverables Summary
-Task	Deliverable	Status
-1	Fixed ball collision logic	✅
-2	Added proper game-over state	✅
-3	Replay menu and state reset	✅
-4	Sound feedback system	✅
-5	Documentation of debugging process	✅
+
+| Task | Deliverable | Status |
+|------|--------------|--------|
+| 1 | Fixed ball collision logic | ✅ |
+| 2 | Added proper game-over state | ✅ |
+| 3 | Replay menu and state reset | ✅ |
+| 4 | Sound feedback system | ✅ |
+| 5 | Documentation of debugging process | ✅ |
+
 
 💬 Author
 
