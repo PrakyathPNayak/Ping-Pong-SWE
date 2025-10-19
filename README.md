@@ -1,157 +1,147 @@
-🏓 Real-Time Ping Pong Game (Fixed & Enhanced)
+# 🏓 Ping Pong – VibeCoding Assignment
 
-A lightweight real-time Ping Pong (Pong) clone built with Python + Pygame, featuring smooth delta-time movement, robust paddle-ball collision, adjustable difficulty, game-over states, replay options, and optional sound effects.
-
-
----
-
-🚀 Features
-
-✅ Smooth, time-based physics – consistent speed across devices
-✅ Accurate collisions – no tunneling or paddle-pass bugs
-✅ Progressive ball speed-up for higher challenge
-✅ AI opponent with adjustable difficulty
-✅ Game-over screen when someone wins
-✅ Replay options – choose Best of 3/5/7 or exit
-✅ Optional sound effects for hits, bounces, and scoring
-✅ Clean modular design – easy to extend and learn from
-
+This project is part of a **VibeCoding critical debugging exercise**.  
+The goal is to **analyze AI-generated prompts**, identify their **subtle embedded bugs**, and **refine both the reasoning and the implementation** to produce a working, bug-free version of a classic **Ping Pong (Pong) game** in Python using `pygame`.
 
 ---
 
-🧱 Project Structure
+## 🎯 Objective
+
+Each "Quick Start Prompt" provided in the original README contained **intentional pitfalls** — logical oversights, missing state handling, or misleading assumptions.  
+My task was to **understand the intent**, **detect the bugs**, and **fix them** through prompt-driven development and verification.
+
+---
+
+## 🧩 Tasks Overview
+
+### 🕹️ Task 1: Refine Ball Collision
+
+**Original AI Prompt**
+> Help me fix ball collision in my ping pong game. The ball passes through paddles sometimes. I need to check if the ball's rectangle overlaps with paddle rectangles and reverse velocity_x when it happens. Just add the collision check right after moving the ball, that should work perfectly for high speeds.
+
+**Identified Issues**
+- Collision checked only *after* movement → tunneling still occurs at high speeds.  
+- Ball velocity simply reversed → could get stuck inside paddle.  
+- No collision cooldown or positional correction.
+
+**Fix**
+- Implemented *swept collision logic* to prevent tunneling.  
+- Repositioned the ball just outside the paddle after hit.  
+- Added velocity direction guard to avoid repeated reversals.
+
+**Verification**
+- Ball bounces reliably even at high speeds.  
+- No tunneling or flickering.
+
+---
+
+### 🧱 Task 2: Game Over Condition
+
+**Original AI Prompt**
+> I need a game over screen when a player reaches 5 points. Create a method that checks if either score equals 5, then display "Player Wins!" or "AI Wins!" on screen. Make sure to keep the game loop running so players can see the message. Add a small delay before closing pygame.
+
+**Identified Issues**
+- Game loop continues → paddles and ball still update behind overlay.  
+- Score check uses equality (`==`) → may miss `>=` edge cases.  
+- Using `time.sleep()` would freeze entire program.
+
+**Fix**
+- Added a `game_over` state flag to pause game logic.  
+- Used `>=` to handle overshoot.  
+- Displayed end screen for a few seconds using pygame’s event loop, not blocking sleep.
+
+**Verification**
+- Gameplay halts cleanly at 5 points.  
+- Message remains visible for a few seconds before replay or quit.
+
+---
+
+### 🔁 Task 3: Replay Feature
+
+**Original AI Prompt**
+> Add a replay feature after game over. Show options for "Best of 3", "Best of 5", "Best of 7", or "Exit". Wait for user input (keys 3, 5, 7, or ESC). When they choose, update the winning score target and reset the ball position. That should let them play again.
+
+**Identified Issues**
+- Only ball reset mentioned — scores, paddles, and states ignored.  
+- “Best of X” misinterpreted as *first to X* instead of *majority of X*.  
+- No proper clearing of game over state.
+
+**Fix**
+- Reset scores, paddles, and ball velocity fully.  
+- Interpreted “Best of X” correctly → win target = ceil(X/2).  
+- Cleared `game_over` and re-entered normal gameplay loop.
+
+**Verification**
+- Replay works smoothly with different targets.  
+- All visual and logical states reset correctly.
+
+---
+
+### 🔊 Task 4: Sound Feedback
+
+**Original AI Prompt**
+> Add sound effects to my pygame ping pong game. Load .wav files for paddle hit, wall bounce, and scoring using pygame.mixer.Sound(). Play the sounds whenever ball.velocity_x or ball.velocity_y changes. Initialize pygame.mixer at the start of the file.
+
+**Identified Issues**
+- Triggering sound on *any* velocity change → constant spam.  
+- No distinction between wall bounce, paddle hit, or score event.  
+- No file existence or mixer error handling.
+
+**Fix**
+- Added distinct sound triggers for each event type.  
+- Wrapped sound loading with try/except for missing files.  
+- Mixer initialization handled gracefully; game runs even without audio.
+
+**Verification**
+- Sounds play only on relevant events.  
+- No crashes without sound files.  
+- Smooth, non-overlapping feedback.
+
+---
+
+## 🧠 Learning Outcomes
+
+- AI prompts can *sound correct* but embed subtle logical traps.  
+- Understanding game state transitions (e.g., `running`, `paused`, `game_over`) is key.  
+- Proper physics handling (collision, velocity correction) prevents emergent bugs.  
+- Sound and input handling must be event-driven, not per-frame brute force.
+
+---
+
+## 📂 Project Structure
 
 ping-pong/
 ├── main.py
+├── game/
+│ ├── init.py
+│ ├── ball.py
+│ ├── paddle.py
+│ └── game_engine.py
+├── assets/
+│ ├── hit.wav
+│ ├── wall.wav
+│ └── score.wav
 ├── requirements.txt
-├── README.md
-└── game/
-    ├── __init__.py
-    ├── ball.py
-    ├── paddle.py
-    └── game_engine.py
-
-Optional sound files (place in project root):
-
-hit.wav      # Paddle hit sound
-bounce.wav   # Wall bounce sound
-score.wav    # Scoring sound
-
+└── README.md ← (this file)
 
 ---
 
-🧩 Installation & Setup
+## 🚀 How to Run
 
-1️⃣ Clone the repository
-
-git clone https://github.com/<your-username>/ping-pong.git
-cd ping-pong
-
-2️⃣ Install dependencies
-
-pip install -r requirements.txt
-
-3️⃣ Run the game
-
+```bash
+pip install pygame
 python main.py
+```
 
+🧾 Deliverables Summary
+Task	Deliverable	Status
+1	Fixed ball collision logic	✅
+2	Added proper game-over state	✅
+3	Replay menu and state reset	✅
+4	Sound feedback system	✅
+5	Documentation of debugging process	✅
 
----
+💬 Author
 
-🎮 Controls
-
-Key	Action
-
-W	Move paddle up
-S	Move paddle down
-ESC	Quit game / Exit replay menu
-3 / 5 / 7	Select Best-of-3/5/7 when match ends
-
-
-
----
-
-🧠 Gameplay Details
-
-Scoring: Each time an opponent misses, the other player scores.
-
-Winning condition: First to reach target score wins (default = 5).
-
-AI movement: Tracks the ball with ~95 % accuracy for a fair challenge.
-
-Replay system: After a win, press 3, 5, or 7 to start a new match.
-
-
-
----
-
-🔊 Sound Effects (Optional)
-
-You can drop in any short .wav files in the project root named:
-
-Filename	Trigger
-
-hit.wav	When ball hits paddle
-bounce.wav	When ball bounces off top/bottom wall
-score.wav	When a player scores
-
-
-If these files are missing, the game runs silently (no crashes).
-
-
----
-
-🛠️ Technical Notes
-
-Built with Pygame 2.1+
-
-Uses delta-time updates (dt = clock.tick(60)/1000) for consistent frame-independent movement
-
-Collision uses rect-based detection with position correction to prevent tunneling
-
-Clean OOP architecture: Ball, Paddle, and GameEngine separated for readability
-
-Runs at a steady 60 FPS
-
-
-
----
-
-🌟 Future Improvements
-
-Power-ups (speed boost, slow-ball, etc.)
-
-Multiplayer over LAN
-
-Visual effects (trails, glow, etc.)
-
-Menu system for settings and difficulty
-
-Mobile-friendly touch controls
-
-
-
----
-
-📷 Screenshots (optional section)
-
-(Add images here once you run the game and take screenshots)
-Example:
-
-![Gameplay Screenshot](assets/gameplay.png)
-
-
----
-
-🧑‍💻 Author
-
-V S Vishwas (original repo)
-Modified & Fixed by: Your Name Here
-
-📚 Licensed under the MIT License
-
-
----
-
-Would you like me to make a shorter “student-friendly” version (for a GitHub profile or project submission) — or keep this detailed one for documentation?
-
+Prakyath P Nayak
+VibeCoding Assignment – Ping Pong Debugging Challenge
